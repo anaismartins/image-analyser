@@ -2,7 +2,6 @@ import cv2
 import os
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.pyplot import figure
 from PIL import Image
 
 files = os.listdir("data")
@@ -30,29 +29,53 @@ for file in files:
     hsumup = [0] * len(gray)
     vsumup = [0] * len(gray[0])
 
-    #
-    # print (len(gray), " - ", len(gray[0]))
-
     for column in range(len(gray)):
         for line in range(len(gray[column])):
             hsumup[column] += int(gray[column][line])
             vsumup[line] += int(gray[column][line])
 
-    figure(figsize=(2.95, 2.95), dpi=100)
-    plt.plot(hsumup, np.arange(len(gray)), linewidth=1)
-    plt.axis("off")
-    plt.tight_layout(pad=0)
-    plt.savefig(f"output\\{file[:-4]}_hsumup.png", bbox_inches="tight", pad_inches=0)
-    plt.clf()
+    # Horizontal sum plot
+    dpi = 100
+    hsumup_width = 2.95 * dpi
+    hsumup_height = 2.95 * dpi
 
-    # print (vsumup)
+    fig_hsumup, ax_hsumup = plt.subplots(
+        figsize=(hsumup_width / dpi, hsumup_height / dpi), dpi=dpi
+    )
+    ax_hsumup.plot(hsumup, np.arange(len(gray)), linewidth=1)
+    ax_hsumup.axis("off")
 
-    figure(figsize=(12.80, 2.95), dpi=100)
-    plt.plot(vsumup, linewidth=1)
-    plt.axis("off")
-    plt.tight_layout(pad=0)
-    plt.savefig(f"output\\{file[:-4]}_vsumup.png", bbox_inches="tight", pad_inches=0)
-    plt.clf()
+    # Remove margins and tight layout
+    ax_hsumup.margins(0)
+    ax_hsumup.xaxis.set_major_locator(plt.NullLocator())
+    ax_hsumup.yaxis.set_major_locator(plt.NullLocator())
+
+    fig_hsumup.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    fig_hsumup.savefig(
+        f"output\\{file[:-4]}_hsumup.png", dpi=dpi, bbox_inches="tight", pad_inches=0
+    )
+    plt.close(fig_hsumup)
+
+    # Vertical sum plot
+    vsumup_width = 12.80 * dpi
+    vsumup_height = 2.95 * dpi
+
+    fig_vsumup, ax_vsumup = plt.subplots(
+        figsize=(vsumup_width / dpi, vsumup_height / dpi), dpi=dpi
+    )
+    ax_vsumup.plot(vsumup, linewidth=1)
+    ax_vsumup.axis("off")
+
+    # Remove margins and tight layout
+    ax_vsumup.margins(0)
+    ax_vsumup.xaxis.set_major_locator(plt.NullLocator())
+    ax_vsumup.yaxis.set_major_locator(plt.NullLocator())
+
+    fig_vsumup.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    fig_vsumup.savefig(
+        f"output\\{file[:-4]}_vsumup.png", dpi=dpi, bbox_inches="tight", pad_inches=0
+    )
+    plt.close(fig_vsumup)
 
     original_image = Image.open(f"output\\{file[:-4]}.bmp")
     hsumup_image = Image.open(f"output\\{file[:-4]}_hsumup.png")
