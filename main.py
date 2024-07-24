@@ -15,7 +15,12 @@ for file in files:
     w = 1280
     crop_image = image[y:h, x:w]
 
-    cv2.imwrite(f"output\\{file[:-4]}.bmp", crop_image)
+    # add white borders of 10 pixels
+    crop_image_borders = cv2.copyMakeBorder(
+        crop_image, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=[255, 255, 255]
+    )
+
+    cv2.imwrite(f"output\\{file[:-4]}.bmp", crop_image_borders)
 
     # [gray]
     # Transform source image to gray if it is not already
